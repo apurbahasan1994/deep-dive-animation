@@ -56,8 +56,10 @@
             <span>Playback Speed : </span>
             <input class="duration-rate-input" type="range" min="0" step="1000" max="5000" />
         </div>
-        <div style="display: flex;align-items: center;"><span>Infinite</span> <input class="animation-iteration-check" type="checkbox"></div>
+        <div style="display: flex;align-items: center;"><span>Infinite</span> <input class="animation-iteration-check"
+                type="checkbox"></div>
     </div>
+    <button onclick="getAnimationInfo()">Get animation info</button>
     <script>
         const box = document.querySelector('.box');
         const buttons = document.querySelectorAll('button');
@@ -96,10 +98,10 @@
                 if (event.target.classList.contains("play-btn")) {
                     animation.play();
                 }
-                if (event.target.classList.contains( "cancel-btn")) {
+                if (event.target.classList.contains("cancel-btn")) {
                     animation.cancel();
                 }
-                if (event.target.classList.contains( "pause-btn")) {
+                if (event.target.classList.contains("pause-btn")) {
                     animation.pause();
                 }
                 if (event.target.classList.contains("reverse-btn")) {
@@ -111,28 +113,47 @@
             })
         });
 
-        playbackRateSlider.addEventListener('change',(event)=>{
+        playbackRateSlider.addEventListener('change', (event) => {
             animation.updatePlaybackRate(event.target.value);
             playbackRateSlider.value = event.target.value;
         });
-        durationRateSlider.addEventListener('change',(event)=>{
+        durationRateSlider.addEventListener('change', (event) => {
             animation.effect.updateTiming({
-                duration : +event.target.value
+                duration: +event.target.value
             });
             durationRateSlider.value = event.target.value;
         });
-        animationIterationCheck.addEventListener('change',(event)=>{
-            if(event.target.value){
+        animationIterationCheck.addEventListener('change', (event) => {
+            if (event.target.value) {
                 animation.effect.updateTiming({
-                    iterations : Infinity
+                    iterations: Infinity
                 })
             }
-            else{
+            else {
                 animation.effect.updateTiming({
-                    iterations : 2
+                    iterations: 2
                 })
             }
-        })
+        });
+        const getAnimationInfo = () => {
+            console.log('currentTime', animation.currentTime);
+            console.log('---------')
+            console.log('startTime', animation.startTime);
+            console.log('---------')
+            console.log('timeLine', animation.timeline);
+            console.log('---------')
+            console.log('playbackRate', animation.playbackRate);
+            console.log('---------')
+            console.log('playState', animation.playState);
+            console.log('---------')
+            console.log('keyFrames', animation.effect.getKeyframes());
+            console.log('---------')
+            console.log('Timing', animation.effect.getTiming());
+            console.log('---------')
+            console.log('Computed Timing', animation.effect.getComputedTiming());
+            console.log('---------')
+
+        }
 
     </script>
 </body>
