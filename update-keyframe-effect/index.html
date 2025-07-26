@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controlling Animations</title>
+    <style>
+        .box {
+            width: 200px;
+            height: 200px;
+            background-color: blueviolet;
+        }
+
+        .controls-container {
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+            border: 1px solid rgb(187, 178, 178);
+            max-width: fit-content;
+            padding: 10px;
+        }
+
+        .controls {
+            margin-bottom: 10px;
+        }
+
+        .playback-container {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+    </div>
+
+    <div class="controls-container">
+        <div style="margin-bottom: 10px;">Animation Object</div>
+        <div class="controls">
+            <button class="play-btn">Play</button>
+            <button class="pause-btn">Pause</button>
+            <button class="cancel-btn">Cancel</button>
+            <button class="reverse-btn">Reverse</button>
+            <button class="finish-btn">Finish</button>
+        </div>
+        <div class="playback-container">
+            <span>Playback Speed : </span>
+            <input class="playback-rate-input" type="range" min="0" step="0.2" max="2" />
+        </div>
+    </div>
+    <div class="controls-container">
+        <div style="margin-bottom: 10px;">Animation Effect</div>
+        <div class="duration-container" style="display: flex;align-items: center;">
+            <span>Playback Speed : </span>
+            <input class="duration-rate-input" type="range" min="0" step="1000" max="5000" />
+        </div>
+        <div style="display: flex;align-items: center;"><span>Infinite</span> <input class="animation-iteration-check" type="checkbox"></div>
+    </div>
+    <script>
+        const box = document.querySelector('.box');
+        const buttons = document.querySelectorAll('button');
+        const playbackRateSlider = document.querySelector('.playback-rate-input');
+        const durationRateSlider = document.querySelector('.duration-rate-input');
+        const animationIterationCheck = document.querySelector('.animation-iteration-check');
+        const animation = box.animate([
+            {
+                transform: "translateX(0) rotate(45deg)",
+                offset: 0,
+                backgroundColor: 'red'
+            },
+            {
+                transform: "translateX(20%) rotate(87deg)",
+                offset: .5,
+                backgroundColor: 'red'
+            },
+            {
+                transform: "translateX(100vw)",
+                offset: 1,
+                backgroundColor: 'green'
+            }
+        ], {
+            easing: 'ease-in',
+            duration: 3000,
+            delay: 1000,
+            direction: 'alternate',
+            iterations: 2
+        });
+        animation.pause();
+        playbackRateSlider.value = 0;
+        durationRateSlider.value = 0;
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', (event) => {
+                if (event.target.classList.contains("play-btn")) {
+                    animation.play();
+                }
+                if (event.target.classList.contains( "cancel-btn")) {
+                    animation.cancel();
+                }
+                if (event.target.classList.contains( "pause-btn")) {
+                    animation.pause();
+                }
+                if (event.target.classList.contains("reverse-btn")) {
+                    animation.reverse();
+                }
+                if (event.target.classList.contains("finish-btn")) {
+                    animation.finish();
+                }
+            })
+        });
+
+        playbackRateSlider.addEventListener('change',(event)=>{
+            animation.updatePlaybackRate(event.target.value);
+            playbackRateSlider.value = event.target.value;
+        });
+        durationRateSlider.addEventListener('change',(event)=>{
+            animation.effect.updateTiming({
+                duration : +event.target.value
+            });
+            durationRateSlider.value = event.target.value;
+        });
+        animationIterationCheck.addEventListener('change',(event)=>{
+            if(event.target.value){
+                animation.effect.updateTiming({
+                    iterations : Infinity
+                })
+            }
+            else{
+                animation.effect.updateTiming({
+                    iterations : 2
+                })
+            }
+        })
+
+    </script>
+</body>
+
+</html>
